@@ -1,0 +1,38 @@
+---
+description: How to fix SSL cert verification errors when LiteLLM connects to internal cluster services
+globs: helm/**/*.yaml
+alwaysApply: false
+---
+
+# SSL / Self-Signed Certificates for Internal Cluster Services
+
+When LiteLLM connects to a model endpoint hosted as an RHOAI InferenceService (or any other
+in-cluster service) it will fail with:
+
+```
+ssl.SSLCertVerificationError: certificate verify failed: self-signed certificate in certificate chain
+```
+
+## Fix
+
+Add `ssl_verify: false` under `litellm_settings` in the LiteLLM config (via `values.yaml` or a
+values overlay):
+
+```yaml
+litellm:
+  config: |
+    litellm_settings:
+      ssl_verify: false
+    model_list:
+      - model_name: my-model
+        litellm_params:
+          model: openai/my-model
+          api_base: https://my-inference-service/v1
+          api_key: "none"
+```
+
+This is already set to `false` in the default `helm/values.yaml`. If a values overlay redefines
+`litellm.config` from scratch, make sure to include this setting.
+
+> **Note**: The equivalent fix in `anythingllm-on-ocp` (a Node.js app) is the environment variable
+> `NODE_TLS_REJECT_UNAUTHORIZED=0` (see `helm/values-rhoai.yaml` in that project).

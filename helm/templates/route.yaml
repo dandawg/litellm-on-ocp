@@ -1,0 +1,18 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: litellm
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: litellm
+  annotations:
+    argocd.argoproj.io/sync-wave: "43"
+spec:
+  to:
+    kind: Service
+    name: litellm
+  port:
+    targetPort: http
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect

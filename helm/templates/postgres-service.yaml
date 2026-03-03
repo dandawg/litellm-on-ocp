@@ -1,0 +1,20 @@
+{{- if .Values.postgres.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: litellm-postgres
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: litellm-postgres
+  annotations:
+    argocd.argoproj.io/sync-wave: "41"
+spec:
+  type: ClusterIP
+  ports:
+    - port: 5432
+      targetPort: postgres
+      protocol: TCP
+      name: postgres
+  selector:
+    app: litellm-postgres
+{{- end }}

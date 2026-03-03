@@ -1,0 +1,62 @@
+# Default values for LiteLLM on OpenShift
+namespace: litellm
+
+image:
+  repository: ghcr.io/berriai/litellm
+  tag: main-latest
+  pullPolicy: IfNotPresent
+
+replicas: 1
+
+service:
+  type: ClusterIP
+  port: 4000
+
+resources:
+  requests:
+    cpu: "500m"
+    memory: "512Mi"
+  limits:
+    cpu: "2"
+    memory: "2Gi"
+
+# LiteLLM master key — used to authenticate API calls and to log into the /ui admin panel.
+# Set this to a secure value (e.g. "sk-my-secret-key").
+auth:
+  masterKey: "sk-changeme"
+
+# Bundled Postgres for LiteLLM spend tracking and key management.
+# Set postgres.enabled: false to skip (LiteLLM will still work, but without persistence).
+postgres:
+  enabled: true
+  image:
+    repository: postgres
+    tag: "15"
+  storage: 5Gi
+  storageClassName: ""  # leave empty to use cluster default
+  database: litellm
+  user: litellm
+  password: "changeme"
+
+# LiteLLM proxy configuration.
+# The content of litellm.config is rendered as /app/config.yaml inside the pod.
+# Override this in a values overlay to add models, routing rules, etc.
+litellm:
+  config: |
+    model_list: []
+    # Add models here or in a values overlay file, for example:
+    #
+    # model_list:
+    #   - model_name: my-model
+    #     litellm_params:
+    #       model: openai/my-model
+    #       api_base: http://my-inference-service/v1
+    #       api_key: "none"
+    #
+    litellm_settings:
+      # Disable TLS verification for internal cluster services (e.g. RHOAI InferenceServices)
+      # that present self-signed certificates. Without this, LiteLLM raises:
+      #   ssl.SSLCertVerificationError: certificate verify failed: self-signed certificate in chain
+      ssl_verify: false
+    general_settings:
+      store_model_in_db: true

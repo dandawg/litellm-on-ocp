@@ -1,0 +1,14 @@
+apiVersion: v2
+name: litellm
+description: LiteLLM Proxy - OpenAI-compatible gateway for multiple LLM providers
+type: application
+version: 1.0.0
+appVersion: "main-latest"
+keywords:
+  - llm
+  - proxy
+  - ai
+  - openai
+  - gateway
+maintainers:
+  - name: Red Hat AI Americas

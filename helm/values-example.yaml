@@ -1,0 +1,41 @@
+# Example values override for a RHOAI-backed LiteLLM deployment.
+#
+# Copy this file to values-<yourenv>.yaml, fill in the real InferenceService URLs
+# and secrets, then reference it in your ArgoCD Application:
+#
+#   helm:
+#     valueFiles:
+#       - values.yaml
+#       - values-<yourenv>.yaml
+#
+# Only fields that differ from values.yaml need to be listed here.
+
+namespace: litellm
+
+auth:
+  masterKey: "sk-replace-with-secure-key"
+
+postgres:
+  password: "replace-with-secure-db-password"
+
+litellm:
+  config: |
+    model_list:
+      - model_name: granite-3-8b-instruct
+        litellm_params:
+          model: openai/granite-3-8b-instruct
+          api_base: http://RHOAI_INFERENCE_SERVICE_URL/v1
+          api_key: "none"
+
+      - model_name: nomic-embed-text
+        litellm_params:
+          model: openai/nomic-embed-text
+          api_base: http://RHOAI_EMBEDDING_SERVICE_URL/v1
+          api_key: "none"
+
+    general_settings:
+      store_model_in_db: true
+
+    litellm_settings:
+      # Disable TLS verification for internal cluster InferenceServices
+      ssl_verify: false
