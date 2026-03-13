@@ -1,9 +1,9 @@
 # Default values for LiteLLM on OpenShift
-namespace: litellm
+namespace: demo-apps
 
 image:
   repository: ghcr.io/berriai/litellm
-  tag: main-latest
+  tag: v1.82.0-stable.patch5  # main-latest
   pullPolicy: IfNotPresent
 
 replicas: 1
