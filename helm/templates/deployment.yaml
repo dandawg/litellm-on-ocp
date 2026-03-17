@@ -36,6 +36,13 @@ spec:
                 secretKeyRef:
                   name: {{ default "litellm-secret" .Values.auth.existingSecret }}
                   key: LITELLM_MASTER_KEY
+            - name: UI_USERNAME
+              value: "admin"
+            - name: UI_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ default "litellm-secret" .Values.auth.existingSecret }}
+                  key: LITELLM_MASTER_KEY
 {{- if .Values.postgres.enabled }}
             - name: POSTGRES_PASSWORD
               valueFrom:
