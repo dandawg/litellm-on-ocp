@@ -21,9 +21,10 @@ resources:
     memory: "2Gi"
 
 # LiteLLM master key configuration.
-# Recommended: pre-create a Kubernetes Secret with LITELLM_MASTER_KEY, then set
-#   auth.existingSecret to its name. The deployment pod fails to start if the secret
-#   does not exist — a deliberate pre-flight gate against deploying with an unconfigured key.
+# Recommended: pre-create a Kubernetes Secret with LITELLM_MASTER_KEY (and
+#   POSTGRES_PASSWORD when postgres.enabled is true), then set auth.existingSecret
+#   to its name. The deployment pod fails to start if the secret does not exist —
+#   a deliberate pre-flight gate against deploying with an unconfigured key.
 # Alternative (local dev only): provide masterKey directly. The chart creates litellm-secret
 #   from this value. Do not use a guessable value in any environment reachable from a network.
 #
@@ -33,6 +34,7 @@ resources:
 auth:
   masterKey: "sk-changeme"
   # Name of a pre-existing Secret that holds LITELLM_MASTER_KEY.
+  # When postgres.enabled is true this secret must also contain POSTGRES_PASSWORD.
   # When set, litellm-secret is not created and the deployment reads from this secret directly.
   existingSecret: ""
 
@@ -51,6 +53,8 @@ postgres:
   storageClassName: ""  # leave empty to use cluster default
   database: litellm
   user: litellm
+  # password is used only when auth.existingSecret is NOT set.
+  # When auth.existingSecret is set, POSTGRES_PASSWORD must be present in that secret.
   password: "changeme"
 
 # Additional environment variables injected via envFrom (e.g. model API key secrets).
