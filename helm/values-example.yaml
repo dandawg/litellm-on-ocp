@@ -12,8 +12,10 @@
 
 namespace: litellm
 
+# Pre-create the litellm-master-key Secret in the target namespace before deploying.
+# See the README Quick Start for the exact oc create secret command.
 auth:
-  masterKey: "sk-replace-with-secure-key"
+  existingSecret: "litellm-master-key"
 
 postgres:
   password: "replace-with-secure-db-password"
