@@ -1,3 +1,4 @@
+{{- if .Values.createNamespace }}
 apiVersion: v1
 kind: Namespace
 metadata:
@@ -6,3 +7,4 @@ metadata:
     name: {{ .Values.namespace }}
   annotations:
     argocd.argoproj.io/sync-wave: "40"
+{{- end }}

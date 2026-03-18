@@ -1,5 +1,9 @@
 # Default values for LiteLLM on OpenShift
 namespace: demo-apps
+# Set to true to have this chart create the namespace. Set to false when the
+# namespace is managed by another ArgoCD Application (e.g. anythingllm) to
+# avoid the "Namespace is part of multiple applications" conflict.
+createNamespace: true
 
 image:
   repository: ghcr.io/berriai/litellm
